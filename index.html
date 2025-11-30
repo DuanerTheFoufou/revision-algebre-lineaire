@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Révision Algèbre Linéaire & Géométrie Vectorielle</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --text-color: #e2e8f0;
+            --accent-color: #38bdf8;
+            --secondary-accent: #818cf8;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-border: rgba(148, 163, 184, 0.1);
+            --success-color: #4ade80;
+            --warning-color: #fbbf24;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Background Effects */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 15% 50%, rgba(56, 189, 248, 0.1), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(129, 140, 248, 0.1), transparent 25%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Typography */
+        h1,
+        h2,
+        h3,
+        h4 {
+            color: #fff;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.025em;
+        }
+
+        h1 {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, var(--accent-color), var(--secondary-accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-size: 2rem;
+            border-bottom: 2px solid var(--card-border);
+            padding-bottom: 0.5rem;
+            margin-top: 3rem;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            margin-top: 2rem;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Navigation */
+        nav {
+            position: sticky;
+            top: 0;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--card-border);
+            z-index: 100;
+            padding: 1rem 0;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        /* Cards & Sections */
+        .section-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Accordion / Examples */
+        .example-box {
+            border: 1px solid var(--card-border);
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .example-header {
+            padding: 1rem;
+            background: rgba(56, 189, 248, 0.1);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .example-header:hover {
+            background: rgba(56, 189, 248, 0.2);
+        }
+
+        .example-content {
+            padding: 1.5rem;
+            display: none;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .example-content.active {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        /* Exercises */
+        .exercise-box {
+            margin: 1rem 0;
+            padding: 1rem;
+            border-left: 3px solid var(--secondary-accent);
+            background: rgba(129, 140, 248, 0.05);
+        }
+
+        .answer-toggle {
+            margin-top: 0.5rem;
+            background: transparent;
+            border: 1px solid var(--secondary-accent);
+            color: var(--secondary-accent);
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .answer-toggle:hover {
+            background: var(--secondary-accent);
+            color: #fff;
+        }
+
+        .answer-content {
+            margin-top: 0.5rem;
+            display: none;
+            color: var(--success-color);
+            font-weight: 500;
+        }
+
+        .answer-content.active {
+            display: block;
+        }
+
+        /* Utilities */
+        .highlight {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .formula-box {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            margin: 1rem 0;
+            border: 1px solid var(--card-border);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <ul class="nav-links">
+            <li><a href="#hero">Accueil</a></li>
+            <li><a href="#ch4">Ch.4 Matrices & Systèmes</a></li>
+            <li><a href="#ch5">Ch.5 Vecteurs</a></li>
+            <li><a href="#ch6">Ch.6 Produits</a></li>
+            <li><a href="#ch2d" style="color: var(--warning-color);">Module 2D</a></li>
+            <li><a href="#ch7">Ch.7 Droites</a></li>
+            <li><a href="#ch8">Ch.8 Plans</a></li>
+        </ul>
+    </nav>
+
+    <div class="container" id="hero">
+        <header style="text-align: center; padding: 4rem 0;">
+            <h1>Révision Algèbre Linéaire</h1>
+            <p style="font-size: 1.2rem; color: #94a3b8; max-width: 600px; margin: 0 auto;">
+                Guide complet pour l'examen final (Chapitres 4 à 8).<br>
+                Théorie, exemples détaillés et exercices.
+            </p>
+        </header>
+
+        <!-- Chapter 7.1 -->
+        <section id="ch2d" class="section-card" style="border-color: var(--warning-color);">
+            <h2 style="color: var(--warning-color); border-color: var(--warning-color);">Module: Géométrie 2D (Rappel
+                Vital)</h2>
+            <p>Attention à ne pas confondre les formules 2D et 3D !</p>
+
+            <h3>1. Équation Générale de la droite (2D)</h3>
+            <div class="formula-box">
+                $$ Ax + By + C = 0 $$
+                <p>Vecteur Normal $\vec{n} = (A, B)$ | Vecteur Directeur $\vec{d} = (-B, A)$</p>
+            </div>
+
+            <h3>2. Distance Point-Droite (2D)</h3>
+            <div class="formula-box">
+                $$ d(P, D) = \frac{|Ax_0 + By_0 + C|}{\sqrt{A^2 + B^2}} $$
+            </div>
+
+            <div class="example-box">
+                <div class="example-header" onclick="toggleExample(this)">
+                    <span>Exemple 2D: Distance Point-Droite</span>
+                    <span>▼</span>
+                </div>
+                <div class="example-content">
+                    <p>Distance entre $P(2, -1)$ et la droite $3x - 4y + 5 = 0$.</p>
+                    <hr style="margin: 1rem 0; border-color: var(--card-border);">
+                    <p><strong>Solution :</strong></p>
+                    <p>$d = \frac{|3(2) - 4(-1) + 5|}{\sqrt{3^2 + (-4)^2}} = \frac{|6 + 4 + 5|}{\sqrt{25}} =
+                        \frac{15}{5} = 3$.</p>
+                    <p class="highlight">Réponse : 3</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chapter 4 -->
+        <section id="ch4" class="section-card">
+            <h2>Chapitre 4: Matrices, Déterminants et Systèmes</h2>
+            <p>Ce chapitre regroupe les outils fondamentaux de l'algèbre linéaire : les matrices, leurs déterminants, et
+                leur utilisation pour résoudre des systèmes d'équations.</p>
+
+            <h3>1. Discussion du paramètre $k$ (CRUCIAL)</h3>
+            <p>Il faut savoir déterminer pour quelles valeurs de $k$ un système a :</p>
+            <ul>
+                <li><strong>Solution Unique :</strong> $det(A) \neq 0$ (ou pivots non nuls).</li>
+                <li><strong>Aucune Solution :</strong> Ligne du type $[0 \dots 0 | \neq 0]$.</li>
+                <li><strong>Infinité de Solutions :</strong> Ligne de zéros $[0 \dots 0 | 0]$ et moins d'équations que
+                    d'inconnues.</li>
+            </ul>
+
+            <div class="example-box">
+                <div class="example-header" onclick="toggleExample(this)">
+                    <span>Exemple 1: Discuter selon $k$</span>
+                    <span>▼</span>
+                </div>
+                <div class="example-content">
+                    <p>Soit le système : $$ \begin{cases} x + y + kz = 1 \\ x + ky + z = 1 \\ kx + y + z = 1 \end{cases}
+                        $$</p>
+                    <hr style="margin: 1rem 0; border-color: var(--card-border);">
+                    <p><strong>Méthode du Déterminant :</strong></p>
+                    <p>Calculons $det(A) = \left| \begin{array}{ccc} 1 & 1 & k \\ 1 & k & 1 \\ k & 1 & 1 \end{array}
+                        \right|$</p>
+                    <p>$= 1(k-1) - 1(1-k) + k(1-k^2)$</p>
+                    <p>$= k - 1 - 1 + k + k - k^3 = -k^3 + 3k - 2$</p>
+                    <p>Factorisation (racine évidente $k=1$) : $-(k-1)^2(k+2)$.</p>
+                    <p><strong>Discussion :</strong></p>
+                    <p>1. Si $k \neq 1$ et $k \neq -2$ : $det(A) \neq 0 \Rightarrow$ <strong>Solution Unique</strong>.
+                    </p>
+                    <p>2. Si $k = 1$ : Matrice devient $\left[ \begin{array}{ccc|c} 1 & 1 & 1 & 1 \\ 0 & 0 & 0 & 0 \\ 0
+                        & 0 & 0 & 0 \end{array} \right] \Rightarrow$ <strong>Infinité de solutions</strong> (1 équation,
+                        3 inconnues).</p>
+                    <p>3. Si $k = -2$ : On remplace et on échelonne. On obtient une ligne $[0 \ 0 \ 0 \ | \ 3]$ (par
+                        exemple) $\Rightarrow$ <strong>Aucune solution</strong>.</p>
+                </div>
+            </div>
+
+            <h3>2. Systèmes Homogènes et Consistance</h3>
+            <p><strong>Système Homogène ($Ax=0$) :</strong> Toujours consistant (admet au moins la solution triviale
+                $\vec{0}$). Admet une infinité de solutions si $det(A)=0$.</p>
+            <p><strong>Condition de Consistance :</strong> Pour qu'un système $Ax=b$ ait une solution, le vecteur $b$
+                doit être combinaison linéaire des colonnes de $A$. Lors de l'échelonnement, si une ligne de zéros
+                apparaît à gauche $[0 \dots 0]$, le terme de droite doit être $0$ pour qu'il y ait consistance.</p>
+
+            <div class="example-box">
+                <div class="example-header" onclick="toggleExample(this)">
+                    <span>Exemple 2: Condition de Consistance</span>
+                    <span>▼</span>
+                </div>
+                <div class="example-content">
+                    <p>À quelle condition sur $b_1, b_2, b_3$ le système suivant a-t-il une solution ?</p>
+                    $$ \left[ \begin{array}{cc|c} 1 & 2 & b_1 \\ 2 & 4 & b_2 \\ 3 & 6 & b_3 \end{array} \right] $$
+                    <hr style="margin: 1rem 0; border-color: var(--card-border);">
+                    <p><strong>Solution :</strong></p>
+                    <p>$L_2 \leftarrow L_2 - 2L_1 \Rightarrow [0 \ 0 \ | \ b_2 - 2b_1]$</p>
+                    <p>$L_3 \leftarrow L_3 - 3L_1 \Rightarrow [0 \ 0 \ | \ b_3 - 3b_1]$</p>
+                    <p>Pour qu'il y ait une solution, il faut éviter $0 = \text{non-nul}$.</p>
+                    <p class="highlight">Conditions : $b_2 - 2b_1 = 0$ ET $b_3 - 3b_1 = 0$.</p>
+                </div>
+            </div>
+
+            <h3>3. Méthode de Gauss-Jordan (Rappel)</h3>
+            <p>L'objectif est de transformer la matrice augmentée en matrice échelonnée réduite (forme [I|x]).</p>
+            <div class="formula-box">
+                $$ [A|b] \sim \dots \sim [I|x] $$
+            </div>
+
+            <!-- Example 1: Unique Solution -->
+            <div class="example-box">
+                <div class="example-header" onclick="toggleExample(this)">
+                    <span>Exemple 1: Solution Unique (Cas classique)</span>
+                    <span>▼</span>
+                </div>
+                <div class="example-content">
+                    <p><strong>Résoudre :</strong> $$ \begin{cases} x + 2y - z = 4 \\ 2x + y + z = -2 \\ -x + y + 2z = 5
+                        \end{cases} $$</p>
+                    <hr style="margin: 1rem 0; border-color: var(--card-border);">
+                    <p><strong>Démarche :</strong></p>
+                    <p>1. Matrice augmentée :</p>
+                    $$ \left[ \begin{array}{ccc|c} 1 & 2 & -1 & 4 \\ 2 & 1 & 1 & -2 \\ -1 & 1 & 2 & 5 \end{array}
+                    \right] $$
+                    <p>2. Faire des zéros sous le pivot (1) de la colonne 1 :</p>
+                    <p>$L_2 \leftarrow L_2 - 2L_1$</p>
+                    <p>$L_3 \leftarrow L_3 + L_1$</p>
+                    $$ \left[ \begin{array}{ccc|c} 1 & 2 & -1 & 4 \\ 0 & -3 & 3 & -10 \\ 0 & 3 & 1 & 9 \end{array}
+                    \right] $$
+                    <p>3. Faire des zéros sous le pivot de la colonne 2 :</p>
+                    <p>$L_3 \leftarrow L_3 + L_2$</p>
+                    $$ \left[ \begin{array}{ccc|c} 1 & 2 & -1 & 4 \\ 0 & -3 & 3 & -10 \\ 0 & 0 & 4 & -1 \end{array}
+                    \right] $$
+                    <p>4. Résolution par substitution arrière (ou continuer Gauss-Jordan) :</p>
+                    <p>De $L_3 : 4z = -1 \Rightarrow z = -1/4$</p>
+                    <p>De $L_2 : -3y + 3(-1/4) = -10 \Rightarrow -3y - 3/4 = -10 \Rightarrow -3y = -37/4 \Rightarrow y =
+                        37/12$</p>
+                    <p>De $L_1 : x + 2(37/12) - (-1/4) = 4 \Rightarrow x + 37/6 + 1/4 = 4 \dots$</p>
+                    <p class="highlight">Réponse : $(x, y, z) = (-31/12, 37/12, -1/4)$</p>
+                </div>
+            </div>
+
+            <!-- Example 2: No Solution -->
+            <div class="example-box">
+                <div class="example-header" onclick="toggleExample(this)">
+                    <span>Exemple 2: Aucune Solution (Système incompatible)</span>
+                    <span>▼</span>
+                </div>
+                <div class="example-content">
+                    <p><strong>Résoudre :</strong> $$ \begin{cases} x + y = 3 \\ 2x + 2y = 7 \end{cases} $$</p>
+                    <hr style="margin: 1rem 0; border-color: var(--card-border);">
+                    <p><strong>Démarche :</strong></p>
+                    <p>1. Matrice augmentée :</p>
+                    $$ \left[ \begin{array}{cc|c} 1 & 1 & 3 \\ 2 & 2 & 7 \end{array} \right] $$
+                    <p>2. $L_2 \leftarrow L_2 - 2L_1$ :</p>
+                    $$ \left[ \begin{array}{cc|c} 1 & 1 & 3 \\ 0 & 0 & 1 \end{array} \right] $$
+                    <p>3. Interprétation :</p>
+                    <p>La dernière ligne correspond à l'équation $0x + 0y = 1$, soit $0 = 1$.</p>
+                    <p class="highlight">Ceci est impossible (contradiction). Donc, aucune solution.</p>
+                </div>
+            </div>
+
+            <!-- Example 3: Infinite Solutions -->
+            <div class="example-box">
+                <div class="example-header" onclick="toggleExample(this)">
+                    <span>Exemple 3: Infinité de Solutions (Paramètres)</span>
+                    <span>▼</span>
+                </div>
+                <div class="example-content">
+                    <p><strong>Résoudre :</strong> $$ \begin{cases} x - y + 2z = 3 \\ 2x - 2y + 4z = 6 \end{cases} $$
+                    </p>
+                    <hr style="margin: 1rem 0; border-color: var(--card-border);">
+                    <p><strong>Démarche :</strong></p>
+                    <p>1. Matrice augmentée :</p>
+                    $$ \left[ \begin{array}{ccc|c} 1 & -1 & 2 & 3 \\ 2 & -2 & 4 & 6 \end{array} \right] $$
+                    <p>2. $L_2 \leftarrow L_2 - 2L_1$ :</p>
+                    $$ \left[ \begin{array}{ccc|c} 1 & -1 & 2 & 3 \\ 0 & 0 & 0 & 0 \end{array} \right] $$
+                    <p>3. Interprétation :</p>
+                    <p>La ligne de zéros indique qu'une équation était redondante. Il reste $x - y + 2z = 3$.</p>
+                    <p>On a 1 équation pour 3 inconnues. On doit poser des paramètres pour les variables libres ($y$ et
+                        $z$).</p>
+                    <p>Posons $y = s$ et $z = t$ (où $s, t \in \mathbb{R}$).</p>
+                    <p>Alors $x = 3 + y - 2z = 3 + s - 2t$.</p>
+                    <p class="highlight">Réponse : $(3 + s - 2t, s, t)$ pour tout $s, t \in \mathbb{R}$.</p>
+                </div>
+            </div>
+
+            <h3>2. Règle de Cramer</h3>
+            <p>Utilisable UNIQUEMENT si la matrice des coefficients est carrée et que son déterminant est non nul
+                ($det(A) \neq 0$).</p>
+            <div class="formula-box">
+                $$ x_i = \frac{det(A_i)}{det(A)} $$
+            </div>
+
+            <div class="example-box">
+                <div class="example-header" onclick="toggleExample(this)">
+                    <span>Exemple 4: Règle de Cramer</span>
+                    <span>▼</span>
+                </div>
+                <div class="example-content">
+                    <p><strong>Résoudre :</strong> $$ \begin{cases} 2x - y = 5 \\ 3x + 2y = 4 \end{cases} $$</p>
+                    <hr style="margin: 1rem 0; border-color: var(--card-border);">
+                    <p><strong>Démarche :</strong></p>
+                    <p>1. Calculer $det(A)$ :</p>
+                    $$ det(A) = \left| \begin{array}{cc} 2 & -1 \\ 3 & 2 \end{array} \right| = (2)(2) - (-1)(3) = 4 + 3
+                    = 7 $$
+                    <p>2. Calculer $det(A_x)$ (remplacer colonne x par les constantes) :</p>
+                    $$ det(A_x) = \left| \begin{array}{cc} 5 & -1 \\ 4 & 2 \end{array} \right| = (5)(2) - (-1)(4) = 10 +
+                    4 = 14 $$
+                    <p>3. Calculer $det(A_y)$ (remplacer colonne y par les constantes) :</p>
+                    $$ det(A_y) = \left| \begin{array}{cc} 2 & 5 \\ 3 & 4 \end{array} \right| = (2)(4) - (5)(3) = 8 - 15
+                    = -7 $$
+                    <p>4. Trouver les solutions :</p>
+                    <p>$x = \frac{14}{7} = 2$</p>
+                    <p>$y = \frac{-7}{7} = -1$</p>
+                    <p class="highlight">Réponse : $(2, -1)$</p>
+                </div>
+            </div>
+
+            <h3>Exercices Supplémentaires</h3>
+            <div class="exercise-box">
+                <p><strong>Q1.</strong> Résoudre le système : $x + y = 5$ et $x - y = 1$.</p>
+                <button class="answer-toggle" onclick="toggleAnswer(this)">Voir la réponse</button>
+                <div class="answer-content">Réponse : (3, 2)</div>
+            </div>
+            <div class="exercise-box">
+                <p><strong>Q2.</strong> Quel est le déterminant de la matrice coefficients de $\begin{cases} 3x + 2y = 0
+                    \\ 6x + 4y = 0 \end{cases}$ ?</p>
+                <button class="answer-toggle" onclick="toggleAnswer(this)">Voir la réponse</button>
+                <div class="answer-content">Réponse : 0 (Le système a une infinité de solutions)</div>
+            </div>
+        </section>
+
+        <!-- Placeholders for other chapters -->
+        <h2>Chapitre 5: Vecteurs (Géométrique et Algébrique)</h2>
+        <p>Ce chapitre introduit les vecteurs, des objets ayant une grandeur et une direction, essentiels en physique et
+            en géométrie.</p>
+
+        <h3>1. Définitions et Opérations de base</h3>
+        <p>Un vecteur $\vec{v}$ est défini par sa longueur (norme) et son orientation. Deux vecteurs sont égaux s'ils
+            ont la même norme et la même direction.</p>
+
+        <h3>2. Indépendance Linéaire et Bases (IMPORTANT)</h3>
+        <p><strong>Indépendance :</strong> Des vecteurs sont linéairement indépendants si la seule façon de faire une
+            combinaison linéaire nulle ($c_1\vec{v_1} + \dots + c_n\vec{v_n} = \vec{0}$) est d'avoir tous les scalaires
+            $c_i = 0$.</p>
+        <p><strong>Test du Déterminant (dans $\mathbb{R}^n$) :</strong> Si on forme une matrice carrée avec $n$ vecteurs
+            de $\mathbb{R}^n$ en colonnes, ils sont indépendants si et seulement si $det(A) \neq 0$. Ils forment alors
+            une <strong>Base</strong>.</p>
+
+        <div class="example-box">
+            <div class="example-header" onclick="toggleExample(this)">
+                <span>Exemple 1: Test d'Indépendance (Déterminant)</span>
+                <span>▼</span>
+            </div>
+            <div class="example-content">
+                <p>Les vecteurs $\vec{u}(1, 2)$, $\vec{v}(3, 4)$ forment-ils une base de $\mathbb{R}^2$ ?</p>
+                <hr style="margin: 1rem 0; border-color: var(--card-border);">
+                <p><strong>Solution :</strong></p>
+                <p>Calculons le déterminant de la matrice formée par ces vecteurs :</p>
+                $$ det(A) = \left| \begin{array}{cc} 1 & 3 \\ 2 & 4 \end{array} \right| = (1)(4) - (3)(2) = 4 - 6 = -2
+                $$
+                <p>Comme $-2 \neq 0$, les vecteurs sont linéairement indépendants.</p>
+                <p class="highlight">Réponse : Oui, ils forment une base.</p>
+            </div>
+        </div>
+
+        <div class="example-box">
+            <div class="example-header" onclick="toggleExample(this)">
+                <span>Exemple 2: Coordonnées dans une base $B$</span>
+                <span>▼</span>
+            </div>
+            <div class="example-content">
+                <p>Trouver les coordonnées du vecteur $\vec{w}(5, 6)$ dans la base $B = \{ (1, 0), (1, 2) \}$.</p>
+                <hr style="margin: 1rem 0; border-color: var(--card-border);">
+                <p><strong>Solution :</strong></p>
+                <p>On cherche $c_1, c_2$ tels que $c_1(1, 0) + c_2(1, 2) = (5, 6)$.</p>
+                <p>Système : $\begin{cases} c_1 + c_2 = 5 \\ 0c_1 + 2c_2 = 6 \end{cases}$</p>
+                <p>De eq 2 : $2c_2 = 6 \Rightarrow c_2 = 3$.</p>
+                <p>De eq 1 : $c_1 + 3 = 5 \Rightarrow c_1 = 2$.</p>
+                <p class="highlight">Réponse : $[\vec{w}]_B = (2, 3)$</p>
+            </div>
+        </div>
+
+        <div class="example-box">
+            <div class="example-header" onclick="toggleExample(this)">
+                <span>Exemple 3: 4ème point d'un parallélogramme (Q8)</span>
+                <span>▼</span>
+            </div>
+            <div class="example-content">
+                <p>Soit $A(1,2)$, $B(4,-1)$, $C(7,4)$. Trouver $D$ tel que $ABCD$ soit un parallélogramme.</p>
+                <hr style="margin: 1rem 0; border-color: var(--card-border);">
+                <p><strong>Règle :</strong> $\vec{AB} = \vec{DC}$ (Attention à l'ordre !)</p>
+                <p>1. $\vec{AB} = (4-1, -1-2) = (3, -3)$.</p>
+                <p>2. Posons $D(x, y)$. Alors $\vec{DC} = (7-x, 4-y)$.</p>
+                <p>3. Égalité : $3 = 7-x \Rightarrow x=4$ et $-3 = 4-y \Rightarrow y=7$.</p>
+                <p class="highlight">Réponse : $D(4, 7)$</p>
+            </div>
+        </div>
+
+        <h3>3. Composantes et Norme (Algébrique)</h3>
+        <p>Dans un repère cartésien, si $A(x_A, y_A, z_A)$ et $B(x_B, y_B, z_B)$, alors :</p>
+        <div class="formula-box">
+            $$ \vec{AB} = (x_B - x_A, y_B - y_A, z_B - z_A) $$
+            $$ \|\vec{v}\| = \sqrt{v_x^2 + v_y^2 + v_z^2} $$
+        </div>
+
+        <div class="example-box">
+            <div class="example-header" onclick="toggleExample(this)">
+                <span>Exemple 2: Calculs de composantes et norme</span>
+                <span>▼</span>
+            </div>
+            <div class="example-content">
+                <p>Soit $A(1, 2, 3)$ et $B(4, -2, 3)$.</p>
+                <p>a) Trouver les composantes de $\vec{AB}$.</p>
+                <p>b) Trouver la norme de $\vec{AB}$.</p>
+                <p>c) Trouver un vecteur unitaire $\vec{u}$ dans la même direction que $\vec{AB}$.</p>
+                <hr style="margin: 1rem 0; border-color: var(--card-border);">
+                <p><strong>Solution :</strong></p>
+                <p>a) $\vec{AB} = (4-1, -2-2, 3-3) = (3, -4, 0)$.</p>
+                <p>b) $\|\vec{AB}\| = \sqrt{3^2 + (-4)^2 + 0^2} = \sqrt{9 + 16} = \sqrt{25} = 5$.</p>
+                <p>c) $\vec{u} = \frac{\vec{AB}}{\|\vec{AB}\|} = \frac{(3, -4, 0)}{5} = (3/5, -4/5, 0)$.</p>
+                <p class="highlight">Réponse : $\vec{u} = (0.6, -0.8, 0)$</p>
+            </div>
+        </div>
+
+        <h3>3. Combinaison Linéaire</h3>
+        <p>Un vecteur $\vec{w}$ est une combinaison linéaire de $\vec{u}$ et $\vec{v}$ s'il existe des scalaires $a, b$
+            tels que $\vec{w} = a\vec{u} + b\vec{v}$.</p>
+
+        <div class="example-box">
+            <div class="example-header" onclick="toggleExample(this)">
+                <span>Exemple 3: Vérifier la colinéarité</span>
+                <span>▼</span>
+            </div>
+            <div class="example-content">
+                <p>Les vecteurs $\vec{u} = (2, -1, 3)$ et $\vec{v} = (-4, 2, -6)$ sont-ils colinéaires (parallèles) ?
+                </p>
+                <hr style="margin: 1rem 0; border-color: var(--card-border);">
+                <p><strong>Solution :</strong></p>
+                <p>Deux vecteurs sont colinéaires si $\vec{v} = k\vec{u}$.</p>
+                <p>Regardons les rapports des composantes :</p>
+                <p>$v_x / u_x = -4 / 2 = -2$</p>
+                <p>$v_y / u_y = 2 / -1 = -2$</p>
+                <p>$v_z / u_z = -6 / 3 = -2$</p>
+                <p>Comme le rapport est constant ($k = -2$), les vecteurs sont parallèles.</p>
+                <p class="highlight">Réponse : Oui, ils sont colinéaires.</p>
+            </div>
+        </div>
+
+        <h3>Exercices Supplémentaires</h3>
+        <div class="exercise-box">
+            <p><strong>Q1.</strong> Calculer la norme de $\vec{v} = (1, 1, 1)$.</p>
+            <button class="answer-toggle" onclick="toggleAnswer(this)">Voir la réponse</button>
+            <div class="answer-content">Réponse : $\sqrt{3}$</div>
+        </div>
+        <div class="exercise-box">
+            <p><strong>Q2.</strong> Si $\vec{u} = (2, 3)$ et $\vec{v} = (-1, 5)$, calculer $2\vec{u} - 3\vec{v}$.</p>
+            <button class="answer-toggle" onclick="toggleAnswer(this)">Voir la réponse</button>
+            <div class="answer-content">Réponse : $(7, -9)$</div>
+        </div>
+
+        <h2>Chapitre 6: Produits de vecteurs</h2>
+        <p>Ce chapitre est fondamental pour la géométrie 3D. Il introduit trois types de produits permettant de calculer
+            des angles, des aires et des volumes.</p>
+
+        <h3>1. Produit Scalaire (Dot Product)</h3>
+        <p>Le résultat est un <strong>nombre réel</strong>. Utile pour trouver l'angle entre deux vecteurs ou vérifier
+            l'orthogonalité.</p>
+        <div class="formula-box">
+            $$ \vec{u} \cdot \vec{v} = u_1v_1 + u_2v_2 + u_3v_3 $$
+            $$ \vec{u} \cdot \vec{v} = \|\vec{u}\| \|\vec{v}\| \cos(\theta) $$
+            <p><strong>Identité des Normes :</strong> $\|\vec{u} + \vec{v}\|^2 = \|\vec{u}\|^2 + \|\vec{v}\|^2 +
+                2(\vec{u} \cdot \vec{v})$</p>
+        </div>
+
+        <div class="example-box">
+            <div class="example-header" onclick="toggleExample(this)">
+                <span>Exemple "Hack": Calcul de Norme sans coordonnées (Q14)</span>
+                <span>▼</span>
+            </div>
+            <div class="example-content">
+                <p>Si $\|\vec{u}\|=3, \|\vec{v}\|=2$ et l'angle est $60^\circ$, trouver $\|2\vec{u} - \vec{v}\|$.</p>
+                <hr style="margin: 1rem 0; border-color: var(--card-border);">
+                <p><strong>Astuce :</strong> Élever au carré !</p>
+                <p>$\|2\vec{u} - \vec{v}\|^2 = (2\vec{u} - \vec{v}) \cdot (2\vec{u} - \vec{v})$</p>
+                <p>$= 4\|\vec{u}\|^2 - 4(\vec{u} \cdot \vec{v}) + \|\vec{v}\|^2$</p>
+                <p>On sait que $\vec{u} \cdot \vec{v} = 3 \times 2 \times \cos(60^\circ) = 3$.</p>
+                <p>$= 4(3^2) - 4(3) + (2^2) = 36 - 12 + 4 = 28$.</p>
+                <p class="highlight">Réponse : $\sqrt{28}$</p>
+            </div>
+        </div>
+
+        <p class="highlight">Si $\vec{u} \cdot \vec{v} = 0$, alors les vecteurs sont orthogonaux (perpendiculaires).</p>
+
+        <div class="example-box">
+            <div class="example-header" onclick="toggleExample(this)">
+                <span>Exemple 1: Angle entre deux vecteurs</span>
+                <span>▼</span>
+            </div>
+            <div class="example-content">
+                <p>Trouver l'angle $\theta$ entre $\vec{u} = (1, 2, 3)$ et $\vec{v} = (4, -1, 1)$.</p>
+                <hr style="margin: 1rem 0; border-color: var(--card-border);">
+                <p><strong>Solution :</strong></p>
+                <p>1. Calculer le produit scalaire :</p>
+                <p>$\vec{u} \cdot \vec{v} = (1)(4) + (2)(-1) + (3)(1) = 4 - 2 + 3 = 5$.</p>
+                <p>2. Calculer les normes :</p>
+                <p>$\|\vec{u}\| = \sqrt{1+4+9} = \sqrt{14}$</p>
+                <p>$\|\vec{v}\| = \sqrt{16+1+1} = \sqrt{18}$</p>
+                <p>3. Utiliser la formule :</p>
+                <p>$\cos(\theta) = \frac{5}{\sqrt{14}\sqrt{18}} = \frac{5}{\sqrt{252}} \approx 0.315$</p>
+                <p>$\theta = \arccos(0.315) \approx 71.6^\circ$</p>
+                <p class="highlight">Réponse : $\approx 71.6^\circ$</p>
+            </div>
+        </div>
+
+        <h3>2. Projection Orthogonale</h3>
+        <div class="formula-box">
+            $$ \text{proj}_{\vec{v}}\vec{u} = \left( \frac{\vec{u} \cdot \vec{v}}{\|\vec{v}\|^2} \right) \vec{v} $$
+        </div>
+        <div class="example-box">
+            <div class="example-header" onclick="toggleExample(this)">
+                <span>Exemple 1.5: Projection de $\vec{u}$ sur $\vec{v}$</span>
+                <span>▼</span>
+            </div>
+            <div class="example-content">
+                <p>Projeter $\vec{u}(2, 3)$ sur $\vec{v}(4, 0)$.</p>
+                <hr style="margin: 1rem 0; border-color: var(--card-border);">
+                <p><strong>Solution :</strong></p>
+                <p>1. Produit scalaire : $(2)(4) + (3)(0) = 8$.</p>
+                <p>2. Norme au carré de $\vec{v}$ : $4^2 + 0^2 = 16$.</p>
+                <p>3. Formule : $\frac{8}{16} \vec{v} = 0.5 (4, 0) = (2, 0)$.</p>
+                <p class="highlight">Réponse : $(2, 0)$</p>
+            </div>
+        </div>
+
+        <h3>3. Produit Vectoriel (Cross Product)</h3>
+        <p>Le résultat est un <strong>vecteur</strong> orthogonal à $\vec{u}$ et $\vec{v}$. Sa norme représente l'aire
+            du parallélogramme formé par les vecteurs.</p>
+        <div class="formula-box">
+            $$ \vec{u} \times \vec{v} = \left| \begin{array}{ccc} \vec{i} & \vec{j} & \vec{k} \\ u_1 & u_2 & u_3 \\ v_1
+            & v_2 & v_3 \end{array} \right| $$
+        </div>
+
+        <div class="example-box">
+            <div class="example-header" onclick="toggleExample(this)">
+                <span>Exemple 2: Calcul d'aire</span>
+                <span>▼</span>
+            </div>
+            <div class="example-content">
+                <p>Calculer l'aire du triangle formé par les sommets $A(1,0,0)$, $B(0,1,0)$ et $C(0,0,1)$.</p>
+                <hr style="margin: 1rem 0; border-color: var(--card-border);">
+                <p><strong>Solution :</strong></p>
+                <p>1. Trouver deux vecteurs directeurs :</p>
+                <p>$\vec{AB} = (0-1, 1-0, 0-0) = (-1, 1, 0)$</p>
+                <p>$\vec{AC} = (0-1, 0-0, 1-0) = (-1, 0, 1)$</p>
+                <p>2. Calculer le produit vectoriel $\vec{AB} \times \vec{AC}$ :</p>
+                $$ \vec{AB} \times \vec{AC} = \left| \begin{array}{ccc} \vec{i} & \vec{j} & \vec{k} \\ -1 & 1 & 0 \\ -1
+                & 0 & 1 \end{array} \right| $$
+                <p>$= \vec{i}(1-0) - \vec{j}(-1-0) + \vec{k}(0 - (-1))$</p>
+                <p>$= (1, 1, 1)$</p>
+                <p>3. Calculer la norme (Aire du parallélogramme) :</p>
+                <p>$\|(1, 1, 1)\| = \sqrt{1+1+1} = \sqrt{3}$</p>
+                <p>4. Aire du triangle = $\frac{1}{2} \times$ Aire du parallélogramme.</p>
+                <p class="highlight">Réponse : $\frac{\sqrt{3}}{2} \approx 0.866$ unités carrées.</p>
+            </div>
+        </div>
+
+        <h3>3. Produit Mixte</h3>
+        <p>Le résultat est un <strong>nombre réel</strong>. La valeur absolue représente le volume du parallélépipède
+            formé par trois vecteurs.</p>
+        <div class="formula-box">
+            $$ [\vec{u}, \vec{v}, \vec{w}] = \vec{u} \cdot (\vec{v} \times \vec{w}) = det(\vec{u}, \vec{v}, \vec{w}) $$
+        </div>
+
+        <div class="example-box">
+            <div class="example-header" onclick="toggleExample(this)">
+                <span>Exemple 3: Volume et Coplanarité</span>
+                <span>▼</span>
+            </div>
+            <div class="example-content">
+                <p>Les vecteurs $\vec{u}(1, 2, 3)$, $\vec{v}(0, 1, 2)$ et $\vec{w}(2, 4, 6)$ sont-ils coplanaires ?</p>
+                <hr style="margin: 1rem 0; border-color: var(--card-border);">
+                <p><strong>Solution :</strong></p>
+                <p>Trois vecteurs sont coplanaires si leur produit mixte est nul (volume = 0).</p>
+                <p>Calculons le déterminant :</p>
+                $$ \left| \begin{array}{ccc} 1 & 2 & 3 \\ 0 & 1 & 2 \\ 2 & 4 & 6 \end{array} \right| $$
+                <p>$= 1(6-8) - 2(0-4) + 3(0-2)$</p>
+                <p>$= -2 + 8 - 6 = 0$</p>
+                <p class="highlight">Réponse : Oui, le volume est 0, donc ils sont coplanaires.</p>
+            </div>
+        </div>
+
+        <h3>Exercices Supplémentaires</h3>
+        <div class="exercise-box">
+            <p><strong>Q1.</strong> Calculer $(1, 0, 0) \cdot (0, 1, 0)$.</p>
+            <button class="answer-toggle" onclick="toggleAnswer(this)">Voir la réponse</button>
+            <div class="answer-content">Réponse : 0 (Orthogonaux)</div>
+        </div>
+        <div class="exercise-box">
+            <p><strong>Q2.</strong> Calculer $(1, 0, 0) \times (0, 1, 0)$.</p>
+            <button class="answer-toggle" onclick="toggleAnswer(this)">Voir la réponse</button>
+            <div class="answer-content">Réponse : $(0, 0, 1)$ (Vecteur $\vec{k}$)</div>
+        </div>
+
+        <h2>Chapitre 7: Droites dans l'espace</h2>
+        <p>Une droite dans l'espace est définie par un point $P_0$ et un vecteur directeur $\vec{d}$.</p>
+
+        <h3>1. Équations de la droite</h3>
+        <div class="formula-box">
+            <p><strong>Vectorielle :</strong> $(x,y,z) = (x_0, y_0, z_0) + t(a, b, c)$</p>
+            <p><strong>Paramétrique :</strong> $\begin{cases} x = x_0 + at \\ y = y_0 + bt \\ z = z_0 + ct \end{cases}$
+            </p>
+            <p><strong>Symétrique :</strong> $\frac{x-x_0}{a} = \frac{y-y_0}{b} = \frac{z-z_0}{c}$</p>
+        </div>
+
+        <div class="example-box">
+            <div class="example-header" onclick="toggleExample(this)">
+                <span>Exemple 1: Trouver l'équation d'une droite</span>
+                <span>▼</span>
+            </div>
+            <div class="example-content">
+                <p>Trouver l'équation paramétrique de la droite passant par $A(1, 2, 3)$ et $B(4, 5, 6)$.</p>
+                <hr style="margin: 1rem 0; border-color: var(--card-border);">
+                <p><strong>Solution :</strong></p>
+                <p>1. Trouver le vecteur directeur $\vec{d} = \vec{AB}$ :</p>
+                <p>$\vec{d} = (4-1, 5-2, 6-3) = (3, 3, 3)$. On peut simplifier par $(1, 1, 1)$.</p>
+                <p>2. Utiliser le point $A(1, 2, 3)$ et $\vec{d}(1, 1, 1)$.</p>
+                <p class="highlight">Réponse : $\begin{cases} x = 1 + t \\ y = 2 + t \\ z = 3 + t \end{cases}$</p>
+            </div>
+        </div>
+
+        <h3>2. Positions relatives de deux droites</h3>
+        <p>Deux droites peuvent être :</p>
+        <ul>
+            <li><strong>Parallèles (distinctes ou confondues) :</strong> Vecteurs directeurs colinéaires.</li>
+            <li><strong>Sécantes :</strong> Vecteurs non colinéaires et elles se croisent (système a une solution).</li>
+            <li><strong>Gauches :</strong> Vecteurs non colinéaires et ne se croisent pas (pas de solution).</li>
+        </ul>
+
+        <div class="example-box">
+            <div class="example-header" onclick="toggleExample(this)">
+                <span>Exemple 2: Droites sécantes ou gauches ?</span>
+                <span>▼</span>
+            </div>
+            <div class="example-content">
+                <p>Soit $D_1 : (1,0,0) + t(1,1,0)$ et $D_2 : (0,1,1) + s(0,1,1)$.</p>
+                <hr style="margin: 1rem 0; border-color: var(--card-border);">
+                <p><strong>Solution :</strong></p>
+                <p>1. Vecteurs directeurs : $\vec{d_1}=(1,1,0)$ et $\vec{d_2}=(0,1,1)$. Ils ne sont pas proportionnels,
+                    donc pas parallèles.</p>
+                <p>2. Chercher l'intersection :</p>
+                <p>$\begin{cases} 1+t = 0 \\ 0+t = 1+s \\ 0 = 1+s \end{cases}$</p>
+                <p>De eq 1 : $t = -1$.</p>
+                <p>De eq 3 : $s = -1$.</p>
+                <p>Vérifier eq 2 : $t = -1$ et $1+s = 0$. Ça marche !</p>
+                <p>Point d'intersection : $t=-1 \Rightarrow (0, -1, 0)$.</p>
+                <p class="highlight">Réponse : Elles sont sécantes au point $(0, -1, 0)$.</p>
+            </div>
+        </div>
+
+        <h3>3. Distance Point-Droite</h3>
+        <div class="formula-box">
+            $$ d(P, D) = \frac{\|\vec{AP} \times \vec{d}\|}{\|\vec{d}\|} $$
+            (Où $A$ est un point sur la droite et $\vec{d}$ le vecteur directeur)
+        </div>
+
+        <h3>Exercices Supplémentaires</h3>
+        <div class="exercise-box">
+            <p><strong>Q1.</strong> Donner un vecteur directeur de la droite $\frac{x-1}{2} = \frac{y}{3} = z$.</p>
+            <button class="answer-toggle" onclick="toggleAnswer(this)">Voir la réponse</button>
+            <div class="answer-content">Réponse : $(2, 3, 1)$</div>
+        </div>
+
+        <h2>Chapitre 8: Plans dans l'espace</h2>
+        <p>Un plan est défini par un point $P_0$ et un vecteur normal $\vec{n}$ (perpendiculaire au plan).</p>
+
+        <h3>1. Équation Cartésienne</h3>
+        <div class="formula-box">
+            $$ ax + by + cz + d = 0 $$
+            <p>Où $\vec{n} = (a, b, c)$ est le vecteur normal.</p>
+        </div>
+
+        <div class="example-box">
+            <div class="example-header" onclick="toggleExample(this)">
+                <span>Exemple 1: Plan passant par 3 points (Classique)</span>
+                <span>▼</span>
+            </div>
+            <div class="example-content">
+                <p>Trouver l'équation du plan passant par $A(1, 0, 0)$, $B(0, 1, 0)$ et $C(0, 0, 1)$.</p>
+                <hr style="margin: 1rem 0; border-color: var(--card-border);">
+                <p><strong>Solution :</strong></p>
+                <p>1. Trouver deux vecteurs directeurs : $\vec{AB} = (-1, 1, 0)$ et $\vec{AC} = (-1, 0, 1)$.</p>
+                <p>2. Trouver la normale avec le produit vectoriel : $\vec{n} = \vec{AB} \times \vec{AC}$.</p>
+                $$ \vec{n} = \left| \begin{array}{ccc} \vec{i} & \vec{j} & \vec{k} \\ -1 & 1 & 0 \\ -1 & 0 & 1
+                \end{array} \right| = (1, 1, 1) $$
+                <p>3. Équation : $1x + 1y + 1z + d = 0$.</p>
+                <p>4. Trouver $d$ avec le point $A(1, 0, 0)$ : $1 + 0 + 0 + d = 0 \Rightarrow d = -1$.</p>
+                <p class="highlight">Réponse : $x + y + z - 1 = 0$</p>
+            </div>
+        </div>
+
+        <div class="example-box">
+            <div class="example-header" onclick="toggleExample(this)">
+                <span>Exemple 1: Trouver l'équation d'un plan</span>
+                <span>▼</span>
+            </div>
+            <div class="example-content">
+                <p>Trouver l'équation du plan passant par $A(1, 2, 3)$ et de vecteur normal $\vec{n} = (2, -1, 4)$.</p>
+                <hr style="margin: 1rem 0; border-color: var(--card-border);">
+                <p><strong>Solution :</strong></p>
+                <p>1. L'équation est de la forme $2x - 1y + 4z + d = 0$.</p>
+                <p>2. Remplacer par le point $A(1, 2, 3)$ pour trouver $d$ :</p>
+                <p>$2(1) - (2) + 4(3) + d = 0$</p>
+                <p>$2 - 2 + 12 + d = 0 \Rightarrow 12 + d = 0 \Rightarrow d = -12$.</p>
+                <p class="highlight">Réponse : $2x - y + 4z - 12 = 0$</p>
+            </div>
+        </div>
+
+        <h3>2. Positions relatives (Droites et Plans)</h3>
+        <ul>
+            <li><strong>Plans parallèles :</strong> Vecteurs normaux colinéaires.</li>
+            <li><strong>Droites Gauches (Skew Lines) :</strong> Ni parallèles (vecteurs non colinéaires), ni sécantes
+                (pas d'intersection).</li>
+        </ul>
+
+        <div class="example-box">
+            <div class="example-header" onclick="toggleExample(this)">
+                <span>Exemple 2: Prouver que deux droites sont gauches</span>
+                <span>▼</span>
+            </div>
+            <div class="example-content">
+                <p>Soit $D_1$ (dir $\vec{d_1}$) et $D_2$ (dir $\vec{d_2}$).</p>
+                <p>1. Vérifier si $\vec{d_1} = k\vec{d_2}$. Si non $\Rightarrow$ Pas parallèles.</p>
+                <p>2. Tenter de résoudre le système d'intersection. Si contradiction ($0=1$) $\Rightarrow$ Pas sécantes.
+                </p>
+                <p class="highlight">Conclusion : Si pas parallèles et pas sécantes $\Rightarrow$ Gauches.</p>
+            </div>
+        </div>
+
+        <div class="example-box">
+            <div class="example-header" onclick="toggleExample(this)">
+                <span>Exemple 2: Intersection Droite et Plan</span>
+                <span>▼</span>
+            </div>
+            <div class="example-content">
+                <p>Trouver l'intersection de la droite $D: (1,0,0) + t(2,1,-1)$ et du plan $\pi: x + y + z = 5$.</p>
+                <hr style="margin: 1rem 0; border-color: var(--card-border);">
+                <p><strong>Solution :</strong></p>
+                <p>1. Équations paramétriques de $D$ : $x = 1+2t$, $y = t$, $z = -t$.</p>
+                <p>2. Substituer dans le plan :</p>
+                <p>$(1+2t) + (t) + (-t) = 5$</p>
+                <p>$1 + 2t = 5 \Rightarrow 2t = 4 \Rightarrow t = 2$.</p>
+                <p>3. Trouver le point :</p>
+                <p>$x = 1+2(2) = 5$</p>
+                <p>$y = 2$</p>
+                <p>$z = -2$</p>
+                <p class="highlight">Réponse : Le point $(5, 2, -2)$.</p>
+            </div>
+        </div>
+
+        <h3>3. Distances et Perpendiculaire Commune</h3>
+        <div class="formula-box">
+            <p><strong>Distance Point-Plan :</strong> $$ d(P, \pi) = \frac{|ax_0 + by_0 + cz_0 + d|}{\|\vec{n}\|} $$</p>
+            <p><strong>Perpendiculaire Commune (Droites Gauches) :</strong> Sa direction est $\vec{n} = \vec{d_1} \times
+                \vec{d_2}$.</p>
+            <strong>Distance entre deux droites gauches :</strong>
+            $$ d(D_1, D_2) = \frac{| \vec{P_1P_2} \cdot (\vec{d_1} \times \vec{d_2}) |}{\| \vec{d_1} \times \vec{d_2}
+            \|} $$
+        </div>
+
+        <h3>Exercices Supplémentaires</h3>
+        <div class="exercise-box">
+            <p><strong>Q1.</strong> Quel est le vecteur normal du plan $3x - z = 5$ ?</p>
+            <button class="answer-toggle" onclick="toggleAnswer(this)">Voir la réponse</button>
+            <div class="answer-content">Réponse : $\vec{n} = (3, 0, -1)$</div>
+        </div>
+
+        <footer style="text-align: center; padding: 2rem; color: #64748b; font-size: 0.9rem;">
+            <p>Bonne chance pour l'examen !</p>
+        </footer>
+    </div>
+
+    <script>
+        function toggleExample(header) {
+            const content = header.nextElementSibling;
+            content.classList.toggle('active');
+            const arrow = header.querySelector('span:last-child');
+            arrow.textContent = content.classList.contains('active') ? '▲' : '▼';
+        }
+
+        function toggleAnswer(btn) {
+            const content = btn.nextElementSibling;
+            content.classList.toggle('active');
+            btn.textContent = content.classList.contains('active') ? 'Cacher la réponse' : 'Voir la réponse';
+        }
+    </script>
+</body>
+
+</html>
